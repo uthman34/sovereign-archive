@@ -1,0 +1,155 @@
+@import "bootstrap/dist/css/bootstrap.min.css";
+@import url('https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700;800&family=Inter:wght@400;500;600&display=swap');
+
+:root {
+  --primary-color: #4c56af;
+  --primary-dim: #4049a2;
+  --primary-container: #e0e0ff;
+  --on-primary-container: #3f48a1;
+
+  --secondary-color: #4d626c;
+  --secondary-container: #cfe6f2;
+
+  --surface-color: #f8f9fa;
+  --surface-container: #ffffff;
+
+  --font-sans: "Inter", sans-serif;
+  --font-headline: "Manrope", sans-serif;
+}
+
+body {
+  font-family: var(--font-sans);
+  background-color: var(--surface-color);
+  color: #2b3437;
+  margin: 0;
+  -webkit-font-smoothing: antialiased;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: var(--font-headline);
+  font-weight: 700;
+}
+
+.btn-primary {
+  background-color: var(--primary-color);
+  border-color: var(--primary-color);
+  border-radius: 12px;
+  font-weight: 700;
+  padding: 0.6rem 1.5rem;
+  transition: all 0.2s ease;
+}
+
+.btn-primary:hover {
+  background-color: var(--primary-dim);
+  border-color: var(--primary-dim);
+  transform: translateY(-1px);
+}
+
+.card {
+  border-radius: 20px;
+  border: 1px solid rgba(0, 0, 0, 0.05);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
+}
+
+.sidebar {
+  width: 260px;
+  height: 100vh;
+  position: fixed;
+  left: 0;
+  top: 0;
+  background: white;
+  border-right: 1px solid rgba(0, 0, 0, 0.05);
+  padding: 2rem 1rem;
+  z-index: 1000;
+}
+
+.sidebar-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.35);
+  z-index: 990;
+}
+
+.main-content {
+  margin-left: 260px;
+  padding: 2rem;
+  min-height: 100vh;
+}
+
+.top-bar {
+  height: 70px;
+  background: rgba(255, 255, 255, 0.8);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+  display: flex;
+  align-items: center;
+  padding: 0 2rem;
+  position: sticky;
+  top: 0;
+  z-index: 900;
+}
+
+.glass-panel {
+  background: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(15px);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.mobile-menu-btn {
+  display: none;
+}
+
+@media (max-width: 991.98px) {
+  .sidebar {
+    transform: translateX(-100%);
+    transition: transform 0.25s ease;
+    width: min(82vw, 300px);
+    box-shadow: 0 12px 28px rgba(0, 0, 0, 0.16);
+  }
+
+  .sidebar.sidebar-open {
+    transform: translateX(0);
+  }
+
+  .main-content {
+    margin-left: 0;
+    padding: 0.75rem;
+  }
+
+  .top-bar {
+    height: auto;
+    min-height: 64px;
+    padding: 0.75rem;
+    gap: 0.75rem;
+  }
+
+  .mobile-menu-btn {
+    display: inline-flex;
+  }
+}
+
+@media (max-width: 767.98px) {
+  .main-content {
+    padding: 0.5rem;
+  }
+
+  .top-bar {
+    flex-wrap: wrap;
+  }
+
+  .top-bar .search-wrap {
+    order: 2;
+    flex: 0 0 100%;
+    max-width: 100%;
+  }
+
+  .top-bar .actions-wrap {
+    margin-left: auto;
+    gap: 0.4rem;
+  }
+}
