@@ -10,8 +10,20 @@ import {
   X
 } from "lucide-react";
 import { Button } from "./ui/Button";
+import { auth } from "../firebase";
 
-export function Sidebar({ currentTab, onTabChange, isOpen, onClose }) {
+export function Sidebar({ currentTab, onTabChange, isOpen, onClose, currentUser, onSignOut }) {
+  const user = currentUser;
+
+  const handleSignOut = async () => {
+    try {
+      await auth.signOut();
+      onSignOut?.();
+    } catch (error) {
+      console.error("Sign out failed:", error);
+    }
+  };
+
   const navItems = [
     { id: "dashboard", label: "Dashboard", icon: LayoutDashboard },
     { id: "library", label: "Library", icon: Library },
@@ -50,8 +62,8 @@ export function Sidebar({ currentTab, onTabChange, isOpen, onClose }) {
               <button
                 onClick={() => onTabChange(item.id)}
                 className={`nav-link w-100 text-start d-flex align-items-center gap-3 px-3 py-2 rounded-3 border-0 transition-all ${currentTab === item.id
-                    ? "bg-primary bg-opacity-10 text-primary fw-bold"
-                    : "text-secondary hover-bg-light"
+                  ? "bg-primary bg-opacity-10 text-primary fw-bold"
+                  : "text-secondary hover-bg-light"
                   }`}
                 style={{ background: 'transparent' }}
               >
@@ -78,13 +90,22 @@ export function Sidebar({ currentTab, onTabChange, isOpen, onClose }) {
             alt="User Profile"
             className="rounded-circle bg-light"
             style={{ width: '32px', height: '32px' }}
-            src="https://picsum.photos/seed/admin/100/100"
+            src={user?.photoURL || "https://picsum.photos/seed/admin/100/100"}
             referrerPolicy="no-referrer"
           />
           <div className="overflow-hidden">
-            <p className="mb-0 fw-bold text-truncate" style={{ fontSize: '12px' }}>Admin User</p>
+            <p className="mb-0 fw-bold text-truncate" style={{ fontSize: '12px' }}>{user?.displayName || "User"}</p>
             <p className="mb-0 text-muted" style={{ fontSize: '10px' }}>Premium Plan</p>
           </div>
+        </div>
+        <div className="px-3 pb-3">
+          <button
+            type="button"
+            onClick={handleSignOut}
+            className="btn btn-outline-secondary btn-sm w-100"
+          >
+            Sign Out
+          </button>
         </div>
       </div>
     </aside>

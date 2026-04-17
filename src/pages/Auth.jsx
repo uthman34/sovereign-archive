@@ -3,10 +3,27 @@ import { motion, AnimatePresence } from "motion/react";
 import { Shield, ArrowLeft, Mail, Lock, User, ArrowRight, Github } from "lucide-react";
 import { Button } from "../components/ui/Button";
 import { Input } from "../components/ui/Card";
+import { signInWithPopup } from "firebase/auth";
+import { auth, provider } from "../firebase";
 
 export default function Auth({ onBack, onSuccess, initialMode = "signin" }) {
   const [mode, setMode] = React.useState(initialMode);
   const [isLoading, setIsLoading] = React.useState(false);
+
+  const signInWithGoogle = async () => {
+    setIsLoading(true);
+
+    try {
+      const result = await signInWithPopup(auth, provider);
+      const loggedInUser = result.user;
+
+      onSuccess(loggedInUser);
+    } catch (error) {
+      console.error("Google sign-in failed:", error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -28,7 +45,7 @@ export default function Auth({ onBack, onSuccess, initialMode = "signin" }) {
             <div className="position-absolute top-50 start-50 translate-middle border border-white rounded-circle" style={{ width: '150%', height: '150%', borderWidth: '20px' }}></div>
           </div>
 
-          <button 
+          <button
             onClick={onBack}
             className="btn btn-link text-decoration-none text-white opacity-75 hover-opacity-100 fw-bold small text-uppercase d-flex align-items-center gap-2 p-0 z-1"
           >
@@ -62,7 +79,7 @@ export default function Auth({ onBack, onSuccess, initialMode = "signin" }) {
 
         {/* Right Pane: Form */}
         <div className="col-lg-7 d-flex flex-column align-items-center justify-content-center p-4 p-md-5 position-relative">
-          <button 
+          <button
             onClick={onBack}
             className="d-lg-none position-absolute top-0 start-0 m-4 btn btn-link text-decoration-none text-muted fw-bold small text-uppercase d-flex align-items-center gap-2"
           >
@@ -74,21 +91,26 @@ export default function Auth({ onBack, onSuccess, initialMode = "signin" }) {
             <div className="text-center text-lg-start mb-5">
               <h3 className="h2 fw-black mb-2 tracking-tight">{mode === "signin" ? "Welcome Back" : "Create Account"}</h3>
               <p className="text-muted fw-medium">
-                {mode === "signin" 
-                  ? "Enter your credentials to access your vault." 
+                {mode === "signin"
+                  ? "Enter your credentials to access your vault."
                   : "Start your 14-day free trial today. No credit card required."}
               </p>
             </div>
 
             <div className="row g-3 mb-4">
               <div className="col-6">
-                <button className="btn btn-outline-light text-dark fw-bold small w-100 py-2 border d-flex align-items-center justify-content-center gap-2">
+                <button
+                  type="button"
+                  onClick={signInWithGoogle}
+                  disabled={isLoading}
+                  className="btn btn-outline-light text-dark fw-bold small w-100 py-2 border d-flex align-items-center justify-content-center gap-2"
+                >
                   <img src="https://www.google.com/favicon.ico" className="w-4 h-4" alt="Google" />
-                  Google
+                  {isLoading ? "Signing in..." : "Google"}
                 </button>
               </div>
               <div className="col-6">
-                <button className="btn btn-outline-light text-dark fw-bold small w-100 py-2 border d-flex align-items-center justify-content-center gap-2">
+                <button type="button" className="btn btn-outline-light text-dark fw-bold small w-100 py-2 border d-flex align-items-center justify-content-center gap-2">
                   <Github size={18} />
                   GitHub
                 </button>
@@ -143,8 +165,8 @@ export default function Auth({ onBack, onSuccess, initialMode = "signin" }) {
               </div>
 
               <div className="col-12 mt-4">
-                <Button 
-                  type="submit" 
+                <Button
+                  type="submit"
                   className="w-100 py-3 rounded-pill d-flex align-items-center justify-content-center gap-2"
                   disabled={isLoading}
                 >
@@ -162,7 +184,7 @@ export default function Auth({ onBack, onSuccess, initialMode = "signin" }) {
 
             <p className="text-center mt-4 mb-0 small fw-medium text-muted">
               {mode === "signin" ? "Don't have an account?" : "Already have an account?"}{" "}
-              <button 
+              <button
                 onClick={() => setMode(mode === "signin" ? "signup" : "signin")}
                 className="btn btn-link text-decoration-none p-0 text-primary fw-bold"
               >

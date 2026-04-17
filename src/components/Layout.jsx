@@ -3,7 +3,7 @@ import { Sidebar } from "./Sidebar";
 import { TopBar } from "./TopBar";
 import { motion, AnimatePresence } from "motion/react";
 
-export function Layout({ children, currentTab, onTabChange }) {
+export function Layout({ children, currentTab, onTabChange, currentUser, onSignOut }) {
   const [isSidebarOpen, setIsSidebarOpen] = React.useState(false);
 
   const handleTabChange = (tab) => {
@@ -18,6 +18,8 @@ export function Layout({ children, currentTab, onTabChange }) {
         onTabChange={handleTabChange}
         isOpen={isSidebarOpen}
         onClose={() => setIsSidebarOpen(false)}
+        currentUser={currentUser}
+        onSignOut={onSignOut}
       />
       {isSidebarOpen && (
         <button

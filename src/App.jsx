@@ -47,14 +47,14 @@ function Upload() {
         <p className="text-muted fw-medium">All files are encrypted with AES-256 before storage.</p>
       </div>
 
-      <div 
+      <div
         onDragOver={(e) => { e.preventDefault(); setIsDragging(true); }}
         onDragLeave={() => setIsDragging(false)}
         onDrop={handleDrop}
         className={`
           p-5 rounded-5 border-2 border-dashed text-center transition-all
-          ${isDragging 
-            ? "border-primary bg-primary bg-opacity-10 scale-105 shadow-lg" 
+          ${isDragging
+            ? "border-primary bg-primary bg-opacity-10 scale-105 shadow-lg"
             : "border-secondary border-opacity-25 bg-light hover-bg-white"}
         `}
         style={{ cursor: 'pointer' }}
@@ -65,7 +65,7 @@ function Upload() {
         <h3 className="h3 fw-bold mb-2">Drop your files here</h3>
         <p className="text-muted mb-4 mx-auto" style={{ maxWidth: '400px' }}>Drag and drop files, or click to browse. Supports PDF, DOCX, XLSX, and ZIP up to 500MB.</p>
         <Button size="lg" className="px-5 rounded-pill">Select Files</Button>
-        
+
         <div className="mt-5 d-flex justify-content-center gap-4 text-muted small fw-bold text-uppercase">
           <div className="d-flex align-items-center gap-2">
             <CheckCircle2 size={16} className="text-primary" />
@@ -142,6 +142,7 @@ export default function App() {
   const [view, setView] = React.useState("landing");
   const [authMode, setAuthMode] = React.useState("signin");
   const [currentTab, setCurrentTab] = React.useState("dashboard");
+  const [currentUser, setCurrentUser] = React.useState(null);
 
   const handleGetStarted = () => {
     setAuthMode("signup");
@@ -153,8 +154,18 @@ export default function App() {
     setView("auth");
   };
 
-  const handleAuthSuccess = () => {
+  const handleAuthSuccess = (user) => {
+    if (user) {
+      setCurrentUser(user);
+    }
     setView("app");
+  };
+
+  const handleSignOut = () => {
+    setCurrentUser(null);
+    setCurrentTab("dashboard");
+    setAuthMode("signin");
+    setView("auth");
   };
 
   if (view === "landing") {
@@ -163,10 +174,10 @@ export default function App() {
 
   if (view === "auth") {
     return (
-      <Auth 
-        initialMode={authMode} 
-        onBack={() => setView("landing")} 
-        onSuccess={handleAuthSuccess} 
+      <Auth
+        initialMode={authMode}
+        onBack={() => setView("landing")}
+        onSuccess={handleAuthSuccess}
       />
     );
   }
@@ -182,7 +193,12 @@ export default function App() {
   };
 
   return (
-    <Layout currentTab={currentTab} onTabChange={setCurrentTab}>
+    <Layout
+      currentTab={currentTab}
+      onTabChange={setCurrentTab}
+      currentUser={currentUser}
+      onSignOut={handleSignOut}
+    >
       {renderContent()}
     </Layout>
   );
